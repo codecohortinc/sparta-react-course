@@ -4,15 +4,16 @@ import { Context } from "../context/ContextApi";
 import { categories } from "../utils/constants";
 import LeftNavMenuItem from "./LeftNavMenuItem";
 function LeftNav() {
-  const { selectedCategory, mobileMenu } = useContext(Context);
+  const { selectedCategory, mobileMenu, setSelectedCategory } =
+    useContext(Context);
 
   const navigate = useNavigate();
   const clickHandler = (name, type) => {
     switch (type) {
       case "category":
-        return false;
+        return setSelectedCategory(name);
       case "home":
-        return false;
+        return setSelectedCategory(name);
       case "menu":
         return false;
 

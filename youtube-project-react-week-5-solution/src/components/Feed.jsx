@@ -4,6 +4,7 @@ import LeftNav from "./LeftNav";
 import VideoCard from "./VideoCard";
 const Feed = () => {
   const { loading, searchResults } = useContext(Context);
+
   return (
     <div className="flex flex-row h-[calc(100%-56px)]">
       <LeftNav />

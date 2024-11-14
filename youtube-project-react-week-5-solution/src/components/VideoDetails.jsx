@@ -1,13 +1,42 @@
 import { abbreviateNumber } from "js-abbreviation-number";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlineLike } from "react-icons/ai";
 import { BsFillCheckCircleFill } from "react-icons/bs";
 import ReactPlayer from "react-player/youtube";
 import SuggestionVideoCard from "./SuggestionVideoCard";
+import { useParams } from "react-router-dom";
+import { fetchDataFromApi } from "../utils/api";
 
 const VideoDetails = () => {
-  const video = undefined;
-  const relatedVideos = [];
+  const { id } = useParams();
+  const [video, setVideo] = useState(undefined);
+  const [relatedVideos, setRelatedVideos] = useState([]);
+
+  const getVideoDetail = async () => {
+    try {
+      const response = await fetchDataFromApi(`video/details/?id=${id}`);
+      setVideo(response);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const getVideoRelated = async () => {
+    try {
+      const response = await fetchDataFromApi(
+        `video/related-contents/?id=${id}`
+      );
+
+      setRelatedVideos(response);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
+    getVideoDetail();
+    getVideoRelated();
+  }, []);
 
   return (
     <div className="flex justify-center flex-row h-[calc(100%-56px)] bg-zinc-900">
@@ -23,6 +52,7 @@ const VideoDetails = () => {
               playing={true}
             />
           </div>
+
           <div className="text-white font-bold text-sm md:text-xl mt-4 line-clamp-2">
             {video?.title}
           </div>
@@ -30,10 +60,13 @@ const VideoDetails = () => {
             <div className="flex">
               <div className="flex items-start">
                 <div className="flex h-11 w-11 rounded-full overflow-hidden">
-                  <img
-                    className="h-full w-full object-cover"
-                    src={video?.author?.avatar[0]?.url}
-                  />
+                  {/* 변경점 : 해당 요소가 있는지 없는지 검사 후 image 렌더링 */}
+                  {video?.author?.avatar?.[0]?.url && (
+                    <img
+                      className="h-full w-full object-cover"
+                      src={video?.author?.avatar?.[0]?.url}
+                    />
+                  )}
                 </div>
               </div>
               <div className="flex flex-col ml-3">
